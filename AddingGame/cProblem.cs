@@ -6,11 +6,20 @@ namespace AddingGame
 {
     public class cProblem
     {
-        int _problemNo { get; } = 0;
-        
+
+
         public cProblem()
         {
             
         }
+
+        public int ProblemNo { get; internal set; }
+
+        public void NewProblem()
+        {
+            ProblemNo++;
+        }
+
+
     }
 }

@@ -10,6 +10,7 @@ namespace AddingGame
         Random _rand;
         int _min;
         int _max;
+        int _cur; // current random value
 
         public cRange(int min, int max)
         {
@@ -25,12 +26,15 @@ namespace AddingGame
         /// Returns a random value between and including the values
         /// _min and max.
         /// </returns>
-        public int Next()
+        public decimal Next()
         {
             if (_max == 0)
-                return 0;
+                _cur = 0;
             else
-                return _rand.Next(_min, _max + 1);
+            {
+                _cur = _rand.Next(_min, _max + 1);
+            }
+            return (decimal)_cur * 1;
         }
 
         /// <summary>
@@ -42,8 +46,25 @@ namespace AddingGame
         {
             _min = min;
             _max = max;
+            _cur = int.MinValue; // preposterous value.
         }
 
+        public int Min
+        {
+            get { return _min; }
+            set { _min = value; }
+        }
+
+        public int Max
+        {
+            get { return _max; }
+            set { _max = value; }
+        }
+
+        public int Cur
+        {
+            get { return _cur; }
+        }
 
     }
 }

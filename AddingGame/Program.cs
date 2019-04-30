@@ -4,9 +4,11 @@ namespace AddingGame
 {
     class Program
     {
+        static cAddingGame _addingGame;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            _addingGame = new cAddingGame();
         }
     }
 }
