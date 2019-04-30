@@ -97,6 +97,18 @@ namespace AddingGame
             }
         }
 
+        public cRange Nickels
+        {
+            get
+            {
+                return _nickels;
+            }
+            set
+            {
+                _nickels = value;
+            }
+        }
+
         public cRange Pennies
         {
             get
