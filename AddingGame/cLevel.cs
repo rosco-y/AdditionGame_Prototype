@@ -92,10 +92,21 @@ namespace AddingGame
 
         public void SetLevel(float level)
         {
+            level = float.Parse(level.ToString("0.#"));   // truncate trailing precision.
             string sLevel = level.ToString();
-            int iDot = sLevel.IndexOf('.') + 1;
             int iLevel = int.Parse(sLevel.Substring(0, 1));
-            int iDollars = int.Parse(sLevel.Substring(iDot, 1)) + 1;
+            int iDollars = 0;
+            if (sLevel.Contains('.'))
+            {
+                int iDot = sLevel.IndexOf('.') + 1;
+                iDollars = int.Parse(sLevel.Substring(iDot, 1)) + 1;
+            }
+            if (iDollars < 1)
+                iDollars = 1; /// 1.0, 2.0, 3.0,...,7.0, 8.0, 9.0 all start at 1 dollar
+                              /// (with the exception that 7, 8 and 9 all have additional 
+                              /// 5, 10, or 15 dollars added to them.)
+            
+
 
             switch (iLevel)
             {

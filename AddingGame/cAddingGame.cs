@@ -9,10 +9,10 @@ namespace AddingGame
     {
         List<decimal> _amounts;
         decimal _totalAmount;
+        decimal _userAnswer;
         const int REPORTDIVIDERLEN = 40;
         const int NUMPROBLEMS = 10;
         String _sReportDivider;
-        int _iNumber = 0;
         cCurrencyValue _randomValueGenerator;
         cLevel _levelManager;
         int _problemNo = 0;
@@ -29,10 +29,13 @@ namespace AddingGame
         }
 
         //private async Task<bool> Update(bool newGame = false, int delay = 1)
+        bool consoleTextColored = false;
         bool Update(bool newGame= false, int delay = 1)
         {
             //const int MILLISECONDS = 1000;
             Console.Clear();
+            Console.WriteLine($"################### Level {_levelManager.Level} ###################");
+
             Console.WriteLine(_sReportDivider);
             if (newGame)
             {
@@ -43,7 +46,16 @@ namespace AddingGame
             {
                 Console.WriteLine(_sReportDivider);
                 Console.Write(new string('.', _problemNo));
+
+                // toggle the amount color each time, to make it easier to spot
+                // especially helpful when a value is repeated.
+                if (consoleTextColored)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+                consoleTextColored = !consoleTextColored;
                 Console.WriteLine($"{_randomValueGenerator.Amount:C}");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(_sReportDivider);
             }
 
@@ -125,7 +137,7 @@ namespace AddingGame
                 else
                 {
                     _levelManager.LevelDown();
-                    Console.WriteLine("Ooops, That's not quite Right.  Better luck next time!!");
+                    Console.WriteLine($"Ooops, {_userAnswer:C} is not quite Right.  Better luck next time!!");
                     ErrorReport();
                     Console.WriteLine($"You are Now at Level {_levelManager.Level}.");
                    
@@ -155,6 +167,11 @@ namespace AddingGame
             Console.WriteLine(_sReportDivider);
             PressTheAnyKey();
         }
+
+        /// <summary>
+        /// Prompt the User for his Answer.
+        /// </summary>
+        /// <returns>true, if the user answers correctly, else false.</returns>
         bool PromptUser()
         {
             bool success = false;
@@ -162,8 +179,12 @@ namespace AddingGame
             Console.WriteLine(_sReportDivider);
             Console.WriteLine("Great Job!  Now it's time to check your Answer!");
             Console.Write("What is your Sum for all the values?  ");
-            decimal answer = decimal.Parse(Console.ReadLine());
-            success = answer == _totalAmount;
+            while(!decimal.TryParse(Console.ReadLine(), out _userAnswer))
+            {
+                Console.WriteLine("That's not a valid number.");
+                Console.Write("Please try again: ");
+            }
+            success = _userAnswer == _totalAmount;
             return success;
         }
     }
