@@ -16,13 +16,7 @@ namespace AddingGame
 
         public cLevelSettings()
         {
-            // initialize to level 1.0
-            Dollars = 1;
-            HalfDollars = 0;
-            Quarters = 0;
-            Dimes = 0;
-            Nickels = 0;
-            Pennies = 0;
+            levelOne(1);
         }
 
         #region LEVEL SETUP METHODS
@@ -99,7 +93,7 @@ namespace AddingGame
         public void SetLevel(float level)
         {
             string sLevel = level.ToString();
-            int iDot = sLevel.IndexOf('.');
+            int iDot = sLevel.IndexOf('.') + 1;
             int iLevel = int.Parse(sLevel.Substring(0, 1));
             int iDollars = int.Parse(sLevel.Substring(iDot, 1)) + 1;
 
@@ -177,6 +171,10 @@ namespace AddingGame
         }
         #endregion
 
+        public float Level
+        {
+            get { return _level; }
+        }
 
         public void LevelUp()
         {

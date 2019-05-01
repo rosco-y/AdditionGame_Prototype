@@ -10,16 +10,20 @@ namespace AddingGame
         List<decimal> _amounts;
         decimal _totalAmount;
         const int REPORTDIVIDERLEN = 40;
+        const int NUMPROBLEMS = 10;
         String _sReportDivider;
         int _iNumber = 0;
         cCurrencyValue _randomValueGenerator;
         cLevel _levelManager;
+        int _problemNo = 0;
+
         public cAddingGame()
         {
             _levelManager = new cLevel();
             _amounts = new List<decimal>();
             _sReportDivider = new string('#', REPORTDIVIDERLEN);
             _randomValueGenerator = new cCurrencyValue();
+            setLevel();
 
             var result = Begin();
         }
@@ -38,15 +42,23 @@ namespace AddingGame
             else
             {
                 Console.WriteLine(_sReportDivider);
+                Console.Write(new string('.', _problemNo));
                 Console.WriteLine($"{_randomValueGenerator.Amount:C}");
                 Console.WriteLine(_sReportDivider);
             }
 
-            Console.Write("Press the AnyKey: ");
-            Console.ReadKey();
+            PressTheAnyKey();
             //await Task.Delay(delay * MILLISECONDS); // int to milliseconds
             return true;
 
+        }
+
+        private static void PressTheAnyKey()
+        {
+            Console.Write("Press the AnyKey (or Q to Quit): ");
+            ConsoleKeyInfo info = Console.ReadKey();
+            if (info.Key == ConsoleKey.Q)
+                Environment.Exit(0);
         }
 
         void setLevel()
@@ -89,10 +101,70 @@ namespace AddingGame
         /// </returns>
         decimal Next()
         {
-            decimal amount = _randomValueGenerator.Next();
-            _totalAmount += amount;
-            _amounts.Add(amount);
-            return amount;
+            Decimal retAmount = 0m;
+
+            if (_problemNo++ < NUMPROBLEMS)
+            {
+                decimal amount = _randomValueGenerator.Next();
+                _totalAmount += amount;
+                _amounts.Add(amount);
+                retAmount =  amount;
+            }
+            else
+            {
+                bool success = PromptUser();
+
+                Console.Clear();
+                Console.WriteLine(_sReportDivider);
+                if (success)
+                {
+                    _levelManager.LevelUp();
+                    Console.WriteLine("GREAT JOB!! SUCCESS!");
+                    Console.WriteLine($"You are Now at Level {_levelManager.Level}!");
+                }
+                else
+                {
+                    _levelManager.LevelDown();
+                    Console.WriteLine("Ooops, That's not quite Right.  Better luck next time!!");
+                    ErrorReport();
+                    Console.WriteLine($"You are Now at Level {_levelManager.Level}.");
+                   
+                }
+                Console.WriteLine(_sReportDivider);
+                PressTheAnyKey();
+
+
+                setLevel();
+                _problemNo = 0;
+                _totalAmount = 0;
+                _amounts.Clear();
+                return Next();
+            }
+            return retAmount;
+        }
+
+        void ErrorReport()
+        {
+            Console.WriteLine(_sReportDivider);
+            foreach (var amount in _amounts)
+            {
+                Console.WriteLine($"\t\t\t{amount:C}");
+            }
+            Console.WriteLine(_sReportDivider);
+            Console.WriteLine($"Correct Amount is:\t{_totalAmount}");
+            Console.WriteLine(_sReportDivider);
+            PressTheAnyKey();
+        }
+        bool PromptUser()
+        {
+            bool success = false;
+            Console.Clear();
+            Console.WriteLine(_sReportDivider);
+            Console.WriteLine("Great Job!  Now it's time to check your Answer!");
+            Console.Write("What is your Sum for all the values?  ");
+            decimal answer = decimal.Parse(Console.ReadLine());
+            success = answer == _totalAmount;
+            return success;
         }
     }
 }
