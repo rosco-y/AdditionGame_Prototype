@@ -1,0 +1,1 @@
+1) trunncate level to 1 digit precision as soon as possible.

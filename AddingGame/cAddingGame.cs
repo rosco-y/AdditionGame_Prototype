@@ -34,7 +34,7 @@ namespace AddingGame
         {
             //const int MILLISECONDS = 1000;
             Console.Clear();
-            Console.WriteLine($"################### Level {_levelManager.Level} ###################");
+            Console.WriteLine($"############## Level {_levelManager.Level:0.0} ###############");
 
             Console.WriteLine(_sReportDivider);
             if (newGame)
